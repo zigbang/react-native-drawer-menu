@@ -11,8 +11,6 @@ import {
   Dimensions
 } from 'react-native';
 
-const {width} = Dimensions.get('window');
-
 import Animation from './Animation';
 
 /* eslint-disable curly, no-new, no-warning-comments */
@@ -74,6 +72,7 @@ export default class Drawer extends Component {
   }
   constructor(props) {
     super(props);
+    this.width = props.windowWidth || Dimensions.get('window')
     this.state = {
       showMask: false
     };
@@ -86,7 +85,7 @@ export default class Drawer extends Component {
     } = this.props;
     this.isLeft = drawerPosition === positions.Both || drawerPosition === positions.Left;
     this.isRight = drawerPosition === positions.Both || drawerPosition === positions.Right;
-    this.MAX_DX = drawerWidth > width ? width : drawerWidth;
+    this.MAX_DX = drawerWidth > this.width ? this.width : drawerWidth;
     this.MAX_ALPHA = maskAlpha > MAX.maskAlpha ? MAX.maskAlpha : maskAlpha;
     this.styles = {
       leftDrawer: {
@@ -94,14 +93,14 @@ export default class Drawer extends Component {
           top: 0,
           bottom: 0,
           left: -this.MAX_DX,
-          right: width
+          right: this.width
         }
       },
       rightDrawer: {
         style: {
           top: 0,
           bottom: 0,
-          left: width,
+          left: this.width,
           right: -this.MAX_DX
         }
       },
@@ -217,7 +216,7 @@ export default class Drawer extends Component {
   }
   _getCurrentDrawerWidth () {
     return this.isLeftActive ? this.styles.leftDrawer.style.left + this.MAX_DX :
-      this.styles.rightDrawer.style.left - width;
+      this.styles.rightDrawer.style.left - this.width;
   }
   _touchPositionCheck(gestureState) {
     const {moveX, dx, dy} = gestureState;
@@ -237,7 +236,7 @@ export default class Drawer extends Component {
       return true;
     }
     // swipe right to open left drawer
-    if (!leftDisabled && this.isLeft && x0 <= width * 0.2 && !isOpen && dx > 0) {
+    if (!leftDisabled && this.isLeft && x0 <= this.width * 0.2 && !isOpen && dx > 0) {
       this.isLeftActive = true;
       return true;
     }
@@ -353,8 +352,8 @@ export default class Drawer extends Component {
   }
   _updateNativeStyles (dx) {
     this.styles.leftDrawer.style.left = -this.MAX_DX + dx;
-    this.styles.leftDrawer.style.right = width - dx;
-    this.styles.rightDrawer.style.left = width + dx;
+    this.styles.leftDrawer.style.right = this.width - dx;
+    this.styles.rightDrawer.style.left = this.width + dx;
     this.styles.rightDrawer.style.right = -this.MAX_DX - dx;
     this.styles.mask.style.backgroundColor = `rgba(0, 0, 0,
       ${(Math.abs(dx) / this.MAX_DX * this.MAX_ALPHA).toFixed(2)})`;
