@@ -8,7 +8,8 @@ import {
   StyleSheet,
   View,
   PanResponder,
-  Dimensions
+  Dimensions,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import Animation from './Animation';
