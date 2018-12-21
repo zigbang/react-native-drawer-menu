@@ -396,13 +396,22 @@ export default class Drawer extends Component {
       <View style={styles.container}>
         <View
           ref={this._mainRefBind}
-          style={[customStyles.main, styles.absolute]}
-          {...this._pan.panHandlers}
-        >
-          {this.props.children}
-          {this.state.showMask && <View
-            ref={this._maskRefBind}
-            style={[customStyles.mask, styles.mask, styles.absolute]}/>}
+          style={[customStyles.main, styles.absolute]}>
+		  <TouchableWithoutFeedback
+			style={styles.absolute}
+			onPress={() => {
+			const isOpen = this.isLeftOpen || this.isRightOpen;
+				if (isOpen) {
+				this.closeDrawer();
+				}
+			}}>
+			<View style={styles.absolute}>
+				{this.props.children}
+				{this.state.showMask && <View
+				ref={this._maskRefBind}
+				style={[customStyles.mask, styles.mask, styles.absolute]}/>}
+			</View>
+		  </TouchableWithoutFeedback>
         </View>
         {this.isLeft &&
           <View
